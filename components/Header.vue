@@ -1,43 +1,63 @@
 <template>
   <div class="header">
+    
     <div class="Header_Title">
-      <nuxt-link to="/" style="text-decoration: none ;color:white">JP Geeks</nuxt-link>
+      <nuxt-link to="/" style="text-decoration: none ;color:white">JPGeeks</nuxt-link>
     </div>
+    
     <div class="Header_item" style="float: right">
       <div v-if="this.$store.state.user.isAuth" style="display:flex">
+        
         <div class="Header_user" v-if="true">
-          <nuxt-link v-bind:to="{name:'user-id',params:{id:this.$store.state.user.uid}}" style="text-decoration: none ;color:white"><i class="fas fa-user-circle  fa-2x"></i></nuxt-link>
+          <nuxt-link v-bind:to="{name:'user-id',params:{id:this.$store.state.user.uid}}" style="text-decoration: none ;color:white">
+            
+            <img src="image" v-if=false></img>
+            <i class="fas fa-user-circle  fa-2x" v-if=true></i>
+            
+          </nuxt-link>
         </div>
+        
+        <div class="User_post" style="padding-bottom:20px">
+          <nuxt-link  v-bind:to="{name:'user-id-product-newcontents',params:{id:this.$store.state.user.uid}}" style="text-decoration: none ;color:white;border-radius: 5px;">投稿する</nuxt-link>
+        </div>
+        
         <div class="Header_Logout" style="padding-bottom:20px">
-          <nuxt-link @click.native="logout" :to="{path:'/'}" style="text-decoration: none ;color:white">Logout</nuxt-link>
+          <nuxt-link @click.native="logout" :to="{path:'/'}" style="text-decoration: none ;color:white;border-radius: 5px;">Logout</nuxt-link>
         </div>
       </div>
+      
       <div v-if="!this.$store.state.user.isAuth"  style="display:flex">
         <div class="Header_Login">
-          <nuxt-link to='/login' style="text-decoration: none ;color:white">Login</nuxt-link>
+          <nuxt-link to='/login' style="text-decoration: none ;color:white;border-radius: 5px;">Login</nuxt-link>
         </div>
+        
         <div class="Header_Signup">
-          <nuxt-link to='/signup' style="text-decoration: none ;color:white">SignUp</nuxt-link>
+          <nuxt-link to='/signup' style="text-decoration: none ;color:white;border-radius: 5px;">SignUp</nuxt-link>
         </div>
       </div>
-  </div>
+    </div>
   </div>
 </template>
 <script>
 import firebase from '@/plugins/firebase'
-
+var user = firebase.auth().currentUser;
 export default {
   components: {
   },
   data(){
     return{
+      image:'',
       id:this.$store.state.user.uid
     }
+  },
+  mounted: function(){
+    this.image=this.$store.state.user.photoURL
   },
   methods: {
   logout: function() {
     window.localStorage.clear();
-      firebase.auth().signOut();
+      this.$store.dispatch('user/signOut')
+            this.$router.push("/");
     }
   }
 }
@@ -47,7 +67,7 @@ export default {
   height: 100px;
   width: 100%;
   padding: 15px 0;
-  background-color: #f1fcfc;
+  background-color: #174a5c;
   color: white;
   display:flex;
 }
@@ -67,7 +87,7 @@ export default {
   margin: 0 20px;
   text-align: right;
 }
-.Header_Login, .Header_Logout{
+.Header_Login, .Header_Logout , .User_post{
   background-color:pink;
   padding:10px;
   margin-right:10px;
@@ -99,6 +119,17 @@ export default {
 }
 .Header_item{
   padding-top: 10px;
+}
+.Header_Login, .Header_Logout , .User_post{
+  background-color:pink;
+  font-size: 0.7em;
+  padding:5px;
+  margin-right:5px;
+}
+.Header_Signup{
+  font-size: 0.7em;
+  background-color:black;
+  padding:5px;
 }
 }
 </style>

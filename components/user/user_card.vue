@@ -1,16 +1,32 @@
 <template>
 <div class="card3">
+        <div v-if="this.$route.params.id == this.$store.state.user.uid">
+          <nuxt-link v-bind:to="{name:'user-id-edit_user',params:{id:this.$store.state.user.id}}" style="text-decoration: none ;color:white">
+              <div class="plusbtn" style="float: right;">ユーザー情報を編集する</div>
+          </nuxt-link>
+        </div>
     <div class="box3" style="float: left">
-        <img class="image3" src="~/assets/image/images.png">
+        <div v-if="!(this.$store.state.user.photoURL)">
+            <img class="image3" src="~/assets/image/240ec862387d03003cb4c41cd93cb0be.png">
+        </div>
+        <div v-if="this.$store.state.user.photoURL">
+            <img class="image3" :src="user.photo">
+        </div>
         <div>
-            <p class="title3">タイトル</p>
-            <p class="content3">本文</p>
+            <p class="title3">{{this.$store.state.user.displayName}}</p>
+            <p class="content3">{{this.$store.state.user.intro}}</p>
         </div>
     </div>
 </div> 
 </template>
 
 <script>
+
+export default {
+    beforeMount(){
+        console.log(this.user)
+    }
+}
 
 </script>
 

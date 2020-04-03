@@ -35,14 +35,19 @@ export default {
     '~/plugins/markdown-it',
     '~/plugins/firebase',
     '~/plugins/auth',
-    { src: '~/plugins/localStorage.js', ssr: false },
+    { src: '@/plugins/vue-chartjs.js', ssr: false },
+    { src: '~/plugins/localStorage.js', ssr: false }
   ],
   /*
   ** Nuxt.js dev-modules
   */
-  buildModules: [
+  
+  modules: [
     '@nuxtjs/dotenv',
+    '@nuxtjs/axios',
   ],
+  axios: {
+  },
   /*
   ** Nuxt.js modules
   */
@@ -64,3 +69,4 @@ export default {
     }
   }
 }
+

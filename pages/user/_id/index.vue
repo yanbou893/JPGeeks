@@ -1,19 +1,19 @@
 <template>
 <div class="user">
-    <User />
-    <Tab style="clear: left" />
+    <User  />
+    <product style="clear: left" />
 </div> 
 </template>
 
 <script>
 import User from '~/components/user/user_card.vue'
-import Tab from '~/components/user/usertab.vue'
+import product from '~/components/main/product_tab_user.vue'
 
 export default {
   components: {
-    Tab,
+    product,
     User
-  }
+  },
 }
 </script>
 

@@ -1,91 +1,191 @@
 <template>
     <div class="tabs">
-      <input id="all" type="radio" name="tab_item_contents" checked>
-      <label class="tab_item_contents" for="all">
-        <div style="margin:0 auto;">
-          <div style="font-size:12px">Docment</div>
-          
-          <p style="padding-top:3px"><i class="fas fa-file-alt fa-lg"></i></p>
-        </div></label>
       
-      <input id="update" type="radio" name="tab_item_contents">
-      <label class="tab_item_contents" for="update">
-        <div style="margin:0 auto;">
-          <div style="font-size:12px">Updates</div>
-          
-          <p style="padding-top:3px;font-size:20px;">2</p>
-        </div>
+      <input id="all" type="radio" name="tab_item_contents" checked>
+        <label class="tab_item_contents" for="all">
+          <div style="margin:0 auto;">
+            <div style="font-size:12px">Docment</div>
+              <p style="padding-top:3px"><i class="fas fa-file-alt fa-lg"></i></p>
+          </div>
         </label>
       
-      <input id="doll" type="radio" name="tab_item_contents">
-      <label class="tab_item_contents" for="doll">
-        <div style="margin:0 auto;">
-          <div style="font-size:12px">Revenue</div>
-          
-          <p style="padding-top:3px;font-size:20px;">3</p>
-        </div></label>
+      <input id="update" type="radio" name="tab_item_contents">
+        <label class="tab_item_contents" for="update">
+          <div style="margin:0 auto;">
+            <div style="font-size:12px">Note</div>
+              <p style="padding-top:3px;font-size:20px;">{{notes.length}}</p>
+          </div>
+        </label>
       
-      <input id="eye" type="radio" name="tab_item_contents">
-      <label class="tab_item_contents" for="eye">
-        <div style="margin:0 auto;">
-          <div style="font-size:12px">View</div>
-          
-          <p style="padding-top:3px;font-size:20px;">12</p>
-        </div></label>
+      <input id="revenu" type="radio" name="tab_item_contents">
+        <label class="tab_item_contents" for="revenu">
+          <div style="margin:0 auto;">
+            <div style="font-size:12px">Revenue</div>
+            <div style="padding-top:3px;font-size:15px;">
+              <div v-if="monetizes.length!=0">{{maxmoney}}円</div>
+              <div v-if="monetizes.length==0">0円</div>
+            </div>
+          </div>
+        </label>
       
       <input id="user" type="radio" name="tab_item_contents">
-      <nuxt-link to="/user/${id}"><label class="tab_item_contents" for="user">
-        <div style="margin:0 auto;">
-          <div style="font-size:12px">Founder</div>
+        <nuxt-link v-bind:to="{name:'user-id',params:{id:user.uid}}">
+          <label class="tab_item_contents" for="user">
+            <div style="margin:0 auto;">
+              <div style="font-size:12px">Founder</div>
           
-          <p style="padding-top:3px"><i class="fas fa-user fa-lg"></i></p>
-        </div>
-          </label></nuxt-link>
+              <p style="padding-top:3px"><i class="fas fa-user fa-lg"></i></p>
+            </div>
+          </label>
+        </nuxt-link>
       
-      <input id="twitter" type="radio" name="tab_item_contents">
-      <a href="#" target="_blank"><label class="tab_item_contents" for="twitter">
-        <div style="margin:0 auto;">
-          <div style="font-size:12px">Twitter</div>
-          
-          <p style="padding-top:3px"><i class="fab fa-twitter fa-lg"></i></p>
-        </div>
-          </label></a>
       
     <div class="tab_content" id="all_content">
       <div class="tab_content_description">
-        <Contents />
+        
+        <div v-if="String(user.uid) == this.$store.state.user.uid">
+          <nuxt-link v-bind:to="{name:'contents-id-edit-edit_contents_body',params:{id:content.id}}" style="text-decoration: none ;color:white">
+              <div class="plusbtn" style="float: right;">編集する</div>
+          </nuxt-link>
+        </div>
+        
+        <Contents  :content="content" :user="user" />
+      
       </div>
     </div>
+    
+    
     <div class="tab_content" id="update_content">
       <div class="tab_content_description">
-        <Update />
+        
+        <div v-if="String(user.uid) == this.$store.state.user.uid">
+          <nuxt-link v-bind:to="{name:'contents-id-add-add_contents_note',params:{id:content.id}}" style="text-decoration: none ;color:white">
+              <div class="plusbtn" style="float: right;">追加する</div>
+          </nuxt-link>
+        </div>
+        
+        <Note  :key="index" v-for="(note,index) in notes" :note=note :content="content" :user="user" />
       </div>
     </div>
-    <div class="tab_content" id="doll_content">
+    
+    
+    <div class="tab_content" id="revenu_content">
       <div class="tab_content_description">
-        <Doll />
+        
+        
+        <div class="chart-container">
+          <line-chart :chartData="chartData" :options="chartOption" :styles="chartStyles" />
+        </div>
+        
+        <div v-if="String(user.uid) == this.$store.state.user.uid">
+          <Revenu  :content="content" :user="user" :datalength="datalength" />
+        </div>
+        <div v-if="String(user.uid) == this.$store.state.user.uid">
+          <nuxt-link v-bind:to="{name:'contents-id-edit-edit_contents_revenu',params:{id:content.id}}" style="text-decoration: none ;color:white">
+              <div class="plusbtn" style="float: right;">編集する</div>
+          </nuxt-link>
+        </div>
+        <!--:key="index" v-for="(monetize,index) in monetizes" :monetize=monetize-->
       </div>
     </div>
-    <div class="tab_content" id="eye_content">
-      <div class="tab_content_description">
-        <Wacth />
-      </div>
-    </div>
-</div>
+    
+  </div>
 </template>
 <script>
-import Contents from '~/components/contents/contents_contents.vue'
-import Update from '~/components/contents/contents_update.vue'
-import Doll from '~/components/contents/contents_doll.vue'
-import Wacth from '~/components/contents/contents_wacth.vue'
+import Contents from '~/components/contents/contents_body.vue'
+import Note from '~/components/contents/contents_note.vue'
+import Revenu from '~/components/contents/contents_revenu.vue'
+import LineChart from '~/components/contents/BarChart.vue'
+import axios from "@/plugins/axios"
   
 export default {
+    props:{
+        content:Object,
+        user:Object
+    },
+  data:function(){
+    return{
+        monetizes:[],
+        notes:[],
+        datalength:[],
+        chartData:null,
+        chartOption:null,
+        chartStyles:null,
+        maxmoney:0,
+        labels:[],
+        data:[],
+        app:[],
+        userdata:[]
+        
+        
+    }
+  },
   components: {
     Contents,
-    Update,
-    Doll,
-    Wacth
-  }
+    Note,
+    Revenu,
+    LineChart
+  },
+    created() {
+              axios.get('v1/monetizes',{params: {app_id: this.$route.params.id}})
+              .then(res => {
+                console.log(this.content.id)
+                console.log(res.data)
+                this.monetizes= res.data
+                this.datalength = this.monetizes.length
+                console.log(this.monetizes[0].money)
+                
+                for(var i=0;i<this.datalength;i++){
+                //対象データへのアクセスは data[i] の様な形式
+                this.data.push(this.monetizes[i].money)
+                this.labels.push(this.monetizes[i].date)
+                if(this.maxmoney<=this.monetizes[i].money){
+                  this.maxmoney=this.monetizes[i].money
+                }
+              }
+              })
+              axios.get('v1/notes',{params: {app_id: this.$route.params.id}})
+              .then(res => {
+                console.log(res.data)
+                this.notes = res.data
+              })
+              
+              // axios.get('v1/apps',{params: {appid: this.$route.params.id}})
+              // .then(res => {
+              //   console.log(res.data)
+              //   this.app = res.data
+              //   axios.get('v1/users',{params: {id: this.app.id}})
+              //   .then(res => {
+              //     console.log(res.data)
+              //     this.userdata=res.data
+                  
+              //   })
+              // })
+              
+              this.chartData={
+                labels:this.labels,
+                datasets:[
+                  {
+                    label:"収益",
+                    data:this.data,
+                    borderColor: "red",
+                    fill: false
+                  }]
+              }
+              
+                // チャートのオプション
+                this.chartOption = {
+                  // アスペクト比を固定しないように変更
+                  maintainAspectRatio: false
+                };
+              
+                // チャートのスタイル: <canvas>のstyle属性として設定
+                this.chartStyles = {
+                  height: "100%",
+                  width: "100%"
+                };
+              
+    }
 }
 </script>
 <style>
@@ -99,7 +199,7 @@ export default {
 
 /*タブのスタイル*/
 .tab_item_contents {
-  width: calc(100%/6);
+  width: calc(100%/4);
   height: 50px;
   border-bottom: 3px solid #5ab4bd;
   background-color: #d9d9d9;
@@ -134,8 +234,7 @@ input[name="tab_item_contents"] {
 /*選択されているタブのコンテンツのみを表示*/
 #all:checked ~ #all_content,
 #update:checked ~ #update_content,
-#doll:checked ~ #doll_content,
-#eye:checked ~ #eye_content {
+#revenu:checked ~ #revenu_content {
   display: block;
 }
 
@@ -143,5 +242,20 @@ input[name="tab_item_contents"] {
 .tabs input:checked + .tab_item_contents {
   background-color: #5ab4bd;
   color: #fff;
+}
+.chart-container {
+  /**
+   * vue-chartjsで生成する<canvas>がabsoluteのため、
+   * relateveを設定
+   */
+  position: relative;
+
+  /**
+   * chartStylesを設定しているので、
+   * height/wightが有効になる
+   */
+  height: 50vh;
+  width: 80vw;
+  margin: 0 auto;
 }
 </style>

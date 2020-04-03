@@ -1,7 +1,7 @@
 <template>
   <div class="signin">
     <h2>Sign in</h2>
-    <input type="text" placeholder="Username" v-model="username">
+    <input type="text" placeholder="Address" v-model="address">
     <input type="password" placeholder="Password" v-model="password">
     <div>
     <button @click="signIn" style="float:left;">Signin</button>
@@ -19,13 +19,13 @@ export default {
   name: 'Signin',
   data: function () {
     return {
-      username: '',
+      address: '',
       password: ''
     }
   },
   methods: {
     signIn: function () {
-      this.$store.dispatch('user/signInMail', { username: this.username, password: this.password })
+      this.$store.dispatch('user/signInMail', { address: this.address, password: this.password })
     },
     googleLogin: function() {
       this.$store.dispatch('user/signInGoogle')

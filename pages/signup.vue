@@ -2,6 +2,7 @@
   <div class="signup">
     <h2>Sign up</h2>
     <input type="text" placeholder="Username" v-model="username">
+    <input type="text" placeholder="Address" v-model="address">
     <input type="password" placeholder="Password" v-model="password">
     <button @click="signUp">Register</button>
     <p>Do you have an account? 
@@ -12,20 +13,31 @@
 
 <script>
 import firebase from 'firebase'
+import axios from "@/plugins/axios"
 
 export default {
   name: 'Signup',
   data () {
     return {
       username: '',
+      address: '',
       password: ''
     }
   },
   methods: {
     signUp: function () {
-      firebase.auth().createUserWithEmailAndPassword(this.username, this.password)
+      firebase.auth().createUserWithEmailAndPassword(this.address, this.password)
         .then(user => {
-          alert('Create account: ', user.email)
+          
+          const useradd = {
+            email: user.email,
+            name: this.username,
+            uid: user.uid,
+            icon:''
+          };
+          axios.post('v1/user',{useradd});
+          this.$store.dispatch('user/signInMail', { address: this.address, password: this.password })
+          
         })
         .catch(error => {
           alert(error.message)

@@ -17,15 +17,22 @@
      <div class="snsicon">
   <p><a href="#" target="_blank" style="display:flex;text-decoration: none;"><i class="fab fa-facebook fa-lg"></i><div class="contact_font">{{facebook}}</div></a></p>
   <p><a href="#" target="_blank" style="display:flex;text-decoration: none;"><i class="fab fa-twitter fa-lg"></i><div class="contact_font">{{twitter}}</div></a></p>
-  <p><a href="#" target="_blank" style="display:flex;text-decoration: none;"><i class="far fa-envelope fa-lg"></i><div class="contact_font">{{mail}}</div></a></p>
+  <p><i class="far fa-envelope fa-lg"></i><div class="contact_font"></div></p>
   <p><a href="https://github.com/yanbou893" target="_blank" style="display:flex;text-decoration: none;"><i class="fab fa-github fa-lg"></i><div class="contact_font">{{github}}</div></a></p>
   <p><a href="#" target="_blank" style="display:flex;text-decoration: none;"><i class="fas fa-file-alt fa-lg"></i><div class="contact_font">{{blog}}</div></a></p>
   </div>
 </div>
 </div>
 </template>
+
 <script>
+import axios from "@/plugins/axios"
+
 export default {
+    props:{
+        user:Array,
+        contact:Array
+    },
 data:function(){
   	return{
   		add_contact_tf:false,
@@ -35,12 +42,22 @@ data:function(){
   		github:"",
   		blog:""
   	}
-},mounted() {
-   console.log( this.$route.path )
-}
-  	,
-  	created:function(){
-  	    this.facebook="abj";
+},
+mounted() {
+        axios.get('v1/contacts',{params: {id: this.user.id}})
+        .then(response => {
+              console.log(response);
+            this.facebook = response.data.facebook;
+            this.twitter = response.data.twitter;
+            this.mail = response.data.mail;
+            this.github = response.data.github;
+            this.blog = response.data.blog;
+        })
+        .catch(error => {
+              console.log(error);
+        });
+        
+      console.log(this.contact)
   	  
   },
   methods:{
@@ -52,6 +69,9 @@ data:function(){
   		}
   	},
   	result_sns:function(){
+  	  axios.post('v1/contacts',{user_id:this.user.id,facebook:this.facebook,twitter:this.twitter
+  	  ,mail:this.mail,github:this.github,blog:this.blog})
+  			this.add_contact_tf=false;
   	  
   	}
   }

@@ -7,7 +7,6 @@
         <hr>
         
       <div class="Header_search" v-if="backend_skill">
-          <div>10個まで指定できます</div>
           <input class="sbox"  id="s" name="s" type="text" v-model="items" placeholder="フリーワードを入力" />
           <button class="sbtn" type="submit" @click="addskill_items">追加</button>
       </div>
@@ -17,12 +16,18 @@
     </div>
 </template>
 <script>
+import axios from "@/plugins/axios"
 export default {
+    props:{
+        user:Array,
+        back:Array
+    },
   data:function(){
   	return{
   		backend_skill:false,
   		items:"",
-  		skill_item:[]
+  		skill_item:[],
+  		id:""
   	}
   },
   methods:{
@@ -32,10 +37,18 @@ export default {
   		}else{
   			this.backend_skill=true;
   		}
+  		console.log(this.user.id)
   	},
   	addskill_items:function(){
+  	  axios.post('v1/skills',{name: this.items})
+  	  axios.get('v1/skills',{params: {id: this.items}}).then(response => {
+  	      console.log(response.data[0])
+  	      axios.post('v1/fronts',{user_id:this.user.id,skill_id:response.data[0]})
+  	  });
+  	      
   	  this.skill_item.push(this.items);
   	  this.items="";
+  	  
   	}
   }
 }

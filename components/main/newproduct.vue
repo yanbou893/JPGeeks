@@ -1,27 +1,40 @@
 <template>
     <div class="newproduct">
-    <nuxt-link  to="/contents/${id}"  style="text-decoration: none ;color:white">
+    <nuxt-link  v-bind:to="{name:'contents-id',params:{id:content.id}}"  style="text-decoration: none ;color:white">
     <div class="productcard">
     <div class="box4" style="float: left">
         <div class="contentsitem">
-        <img class="producticon" src="~/assets/image/images.png">
+            <div v-if="!(content.icon)">
+                <img class="producticon" src="~/assets/image/unnamed.png">
+            </div>
+            <div v-if="content.icon">
+                <img class="producticon" :src="content.icon">
+            </div>
         <div class="text" style="text-align:left;padding-left:10px;padding-right:10px;">
-            <p class="producttitle">JP Geeks</p>
-            <p class="productcontent">ポートフォリオ兼個人開発作品共有サービス</p>
+            <p class="producttitle">{{content.title}}</p>
+            <p class="productcontent">{{content.semititle}}</p>
         </div>
         </div>
-            <hr>
-        <div class="contentsvalue">
-            <i class="far fa-heart"></i>
-            <p class="good">2</p>
-            <i class="far fa-comment"></i>
-            <p class="comment">2</p>
-        </div>
+        <!--    <hr>-->
+        <!--<div class="contentsvalue">-->
+        <!--    <i class="far fa-heart"></i>-->
+        <!--    <p class="good">2</p>-->
+        <!--    <i class="far fa-comment"></i>-->
+        <!--    <p class="comment">2</p>-->
+        <!--</div>-->
     </div>
     </div>
     </nuxt-link>
     </div>
 </template>
+<script>
+export default {
+    props:{
+        content:Array,
+    },
+    
+}
+</script>
 <style type="text/css">
     .newproduct{
         display: flex;
@@ -44,11 +57,11 @@
     }
     .contentsitem{
         display: flex;
-        padding-bottom:30px;
+        padding-bottom:20px;
     }
     .producticon {
-        width: 50px;
-        height: 50px;
+        width: 70px;
+        height: 70px;
         margin-top:10px;
         margin-left:30px;
         border: 0px solid black;
