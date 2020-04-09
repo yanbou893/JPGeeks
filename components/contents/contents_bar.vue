@@ -1,62 +1,37 @@
 <template>
-    <div class="tabs">
+    <div class="tab">
       
-      <input id="all" type="radio" name="tab_item_contents" checked>
-        <label class="tab_item_contents" for="all">
-          <div style="margin:0 auto;">
-            <div style="font-size:12px">Docment</div>
-              <p style="padding-top:3px"><i class="fas fa-file-alt fa-lg"></i></p>
-          </div>
-        </label>
-      
-      <input id="update" type="radio" name="tab_item_contents">
-        <label class="tab_item_contents" for="update">
-          <div style="margin:0 auto;">
-            <div style="font-size:12px">Note</div>
-              <p style="padding-top:3px;font-size:20px;">{{notes.length}}</p>
-          </div>
-        </label>
-      
-      <input id="revenu" type="radio" name="tab_item_contents">
-        <label class="tab_item_contents" for="revenu">
-          <div style="margin:0 auto;">
-            <div style="font-size:12px">Revenue</div>
-            <div style="padding-top:3px;font-size:15px;">
-              <div v-if="monetizes.length!=0">{{maxmoney}}円</div>
-              <div v-if="monetizes.length==0">0円</div>
-            </div>
-          </div>
-        </label>
-      
-      <input id="user" type="radio" name="tab_item_contents">
-        <nuxt-link v-bind:to="{name:'user-id',params:{id:user.uid}}">
-          <label class="tab_item_contents" for="user">
-            <div style="margin:0 auto;">
-              <div style="font-size:12px">Founder</div>
-          
-              <p style="padding-top:3px"><i class="fas fa-user fa-lg"></i></p>
-            </div>
-          </label>
-        </nuxt-link>
-      
-      
-    <div class="tab_content" id="all_content">
-      <div class="tab_content_description">
-        
-        <div v-if="String(user.uid) == this.$store.state.user.uid">
-          <nuxt-link v-bind:to="{name:'contents-id-edit-edit_contents_body',params:{id:content.id}}" style="text-decoration: none ;color:white">
-              <div class="plusbtn" style="float: right;">編集する</div>
-          </nuxt-link>
-        </div>
-        
-        <Contents  :content="content" :user="user" />
-      
+      <!-- Nav tabs -->
+      <div  class="tabs is-toggle is-fullwidth">
+        <ul>
+          <li v-bind:class="{ 'is-active': tabsel == 'pic' }" @click="tabsel = 'pic'"><a>Document</a></li>
+          <li v-bind:class="{ 'is-active': tabsel == 'music' }" @click="tabsel = 'music'"><a>Notes</a></li>
+          <li v-bind:class="{ 'is-active': tabsel == 'video' }" @click="tabsel = 'video'"><a>Revenue</a></li>
+          <li v-bind:class="{ 'is-active': tabsel == 'doc' }" @click="founder(user.uid)"><a>Founder</a></li>
+        </ul>
       </div>
-    </div>
-    
-    
-    <div class="tab_content" id="update_content">
-      <div class="tab_content_description">
+      
+      <!-- Tab panes -->
+      <div class="content">
+        <div v-show="tabsel == 'pic'">      
+          <!--<div class="tab_content" id="all_content">-->
+          <!--  <div class="tab_content_description">-->
+              
+              <div v-if="String(user.uid) == this.$store.state.user.uid">
+                <nuxt-link v-bind:to="{name:'contents-id-edit-edit_contents_body',params:{id:content.id}}" style="text-decoration: none ;color:white">
+                    <div class="plusbtn" style="float: right;">編集する</div>
+                </nuxt-link>
+              </div>
+              
+              <Contents  :content="content" :user="user" />
+            
+          <!--  </div>-->
+          <!--</div>-->
+        </div>
+        <div v-show="tabsel == 'music'">
+              
+    <!--<div class="tab_content" id="update_content">-->
+    <!--  <div class="tab_content_description">-->
         
         <div v-if="String(user.uid) == this.$store.state.user.uid">
           <nuxt-link v-bind:to="{name:'contents-id-add-add_contents_note',params:{id:content.id}}" style="text-decoration: none ;color:white">
@@ -65,14 +40,12 @@
         </div>
         
         <Note  :key="index" v-for="(note,index) in notes" :note=note :content="content" :user="user" />
-      </div>
-    </div>
-    
-    
-    <div class="tab_content" id="revenu_content">
-      <div class="tab_content_description">
+    <!--  </div>-->
+    <!--</div>-->
+        </div>
         
-        
+        <div v-show="tabsel == 'video'">
+          
         <div class="chart-container">
           <line-chart :chartData="chartData" :options="chartOption" :styles="chartStyles" />
         </div>
@@ -85,9 +58,16 @@
               <div class="plusbtn" style="float: right;">編集する</div>
           </nuxt-link>
         </div>
-        <!--:key="index" v-for="(monetize,index) in monetizes" :monetize=monetize-->
+        </div>
+        
+        <div v-show="tabsel == 'doc'">
+        
+        </div>
+        
       </div>
-    </div>
+      
+      
+
     
   </div>
 </template>
@@ -115,8 +95,9 @@ export default {
         labels:[],
         data:[],
         app:[],
-        userdata:[]
+        userdata:[],
         
+    tabsel: "pic"
         
     }
   },
@@ -126,6 +107,12 @@ export default {
     Revenu,
     LineChart
   },
+  methods: {
+  founder: function(index) {
+            this.$router.push({ name: 'user-id', params: { id:index } });
+    }
+  },
+  
     created() {
               axios.get('v1/monetizes',{params: {app_id: this.$route.params.id}})
               .then(res => {

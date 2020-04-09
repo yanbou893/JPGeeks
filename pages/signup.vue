@@ -6,7 +6,7 @@
     <input type="password" placeholder="Password" v-model="password">
     <button @click="signUp">Register</button>
     <p>Do you have an account? 
-      <router-link to="/login">sign in now!!</router-link>
+      <nuxt-link to="/login">sign in now!!</nuxt-link>
     </p>
   </div>
 </template>

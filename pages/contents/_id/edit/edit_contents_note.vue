@@ -6,10 +6,12 @@
       </div>
       タイトル
         <input type="text" v-model="title" class="titlearea">
-      <div style="display:flex" class="bodycontents">
-        <textarea v-model="model" class="bodyformat"></textarea>
-        <div v-html="$md.render(String(model))" class="outputformat"></div>
-      </div>
+      
+          <div class="mavonEditor">
+            <no-ssr>
+              <mavon-editor :toolbars="markdownOption" v-model="model" :language="'ja'"/>
+            </no-ssr>
+          </div>
       <div @click="savenote">save</div>
     </div>
 </template>

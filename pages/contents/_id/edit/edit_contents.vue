@@ -1,41 +1,77 @@
 <template>
-    <div class="contentsform">
-        <form>
-            <p>サービス名</p>
-            <input type="text" v-model="title" />
-            <p>サービスの内容</p>
-            <input type="text" v-model="semititle" />
-            <p>URL</p>
-            <input type="text" v-model="URL" />
-            <p>アイコン</p>
-            <input type="file" @change="onUpload($event)"/>
-            <p>Twitter</p>
-            <input type="text" v-model="twitter" />
-            <p>リリース日</p>
-            <input type="text" v-model="release" />
-            <p>ビジネスモデル</p>
-                    <input type="checkbox" v-model="aaa" value="広告">広告モデル
-                    <input type="checkbox" v-model="aaa" value="課金">課金モデル
-                    <input type="checkbox" v-model="aaa" value="EC">ECモデル
-                    <input type="checkbox" v-model="aaa" value="仲介">仲介モデル
-                    <input type="checkbox" v-model="aaa" value="定額">定額課金モデル
-                    <input type="checkbox" v-model="aaa" value="なし">なし
-            <p>プラットフォーム</p>
-                    <input type="checkbox" v-model="bbb" value="iOS">iOS
-                    <input type="checkbox" v-model="bbb" value="Android">Android
-                    <input type="checkbox" v-model="bbb" value="Desktop">Desktop
-                    <input type="checkbox" v-model="bbb" value="Web">Web
-                </select>
-                <div style="border:solid 1px black;margin:10px;padding:10px;background-color:pink">
-                  <div class="contents_docmentacion">作品の内容について</div>
-                  <div class="contents_docmentacion_sub">こだわった点や、どういった発想で生まれたサービスなのかを教えてください。</div>
-                </div>
-                <div style="display:flex" class="bodycontents">
-                  <textarea v-model="model" class="bodyformat"></textarea>
-                  <div v-html="$md.render(model)" class="outputformat"></div>
-                </div>
+  
+<div class="contentsform">
+<div class="field">
+  <label class="label">サービス名</label>
+  <div class="control">
+    <input class="input" type="text" v-model="title">
+  </div>
+</div>
+
+<div class="field">
+  <label class="label">URL</label>
+  <div class="control">
+    <input class="input" type="text"  v-model="URL" >
+  </div>
+</div>
+
+<div class="field">
+  <label class="label">サービスの内容</label>
+  <div class="control">
+    <input class="input" type="text" v-model="intro" >
+  </div>
+</div>
+
+<div class="field">
+  <label class="label">アイコン</label>
+  <div class="control">
+      <input type="file" @change="onUpload($event)"/>
+      <div v-if="icon" style="display:flex">
+        <img class="image_icon" :src="icon">
+        <div @click="icon=null">削除</div>
+      </div>
+  </div>
+</div>
+
+<div class="field">
+  <label class="label">Twitter</label>
+  <div class="control">
+    <input class="input" type="text" v-model="twitter" >
+  </div>
+</div>
+      
+<div class="field">
+  <label class="label">ビジネスモデル</label>
+  <div class="control" style="display:flex">
+              <div v-for="(aa, i) in aaa" :key="i">
+                <input
+                  :id="'aa' + i"
+                  type="checkbox"
+                  :value="aa"
+                  v-model="bm"
+                  
+                >
+                <label :for="'aa' + i">{{aa}}</label>
+              </div>
+  </div>
+</div>
+      
+<div class="field">
+  <label class="label">プラットフォーム</label>
+  <div class="control" style="display:flex">
+              <div v-for="(bb, i) in bbb" :key="i">
+                <input
+                  :id="'bb' + i"
+                  type="checkbox"
+                  :value="bb"
+                  v-model="pf"
+                  
+                >
+                <label :for="'bb' + i">{{bb}}</label>
+              </div>
+  </div>
+</div>
             <p><div @click.native="next_doc">次へ</div></p>
-        </form>
     </div>
 </template>
 <script>
@@ -82,8 +118,8 @@ export default {
       }
     },
       	next_doc:function(){
-      	    this.bisinesmodel=this.aaa.join(',')
-      	    this.pratform=this.bbb.join(',')
+      	    this.bisinesmodel=this.bm.join(',')
+      	    this.pratform=this.pf.join(',')
       	    console.log(this.user)
             axios.put('v1/apps' + this.app_id,{
       	        title:this.title,
@@ -105,9 +141,10 @@ export default {
                 this.URL = res.data.URL,
                 this.icon = res.data.icon,
                 this.twitter = res.data.twitter,
-                this.aaa = res.data.bisinessmodel,
-                this.bbb = res.data.pratform,
+                this.aaa = res.data.bisinessmodel.split( ',' ),
+                this.bbb = res.data.pratform.split( ',' ),
                 this.app_id = res.data.id
+                console.log(this.aaa)
               })
   
   }
@@ -121,5 +158,10 @@ export default {
         width:40%;
         padding-left:5%;
         padding-right:5%;
+    }
+    .image_icon{
+      width:25%;
+      height:25%;
+      padding:30px;
     }
 </style>

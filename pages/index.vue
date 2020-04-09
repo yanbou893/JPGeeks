@@ -34,7 +34,6 @@ Header{
   width: 100%; 
   justify-content: center;
   text-align: center;
-  background-color:lightgray;
 }
 .content{
   padding-top:0px;
@@ -48,6 +47,5 @@ serch{
 }
 product{
   width:50%;
-  background-color:#72b5b7;
 }
 </style>

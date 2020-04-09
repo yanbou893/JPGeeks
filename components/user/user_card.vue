@@ -1,20 +1,20 @@
 <template>
 <div class="card3">
-        <div v-if="this.$route.params.id == this.$store.state.user.uid">
-          <nuxt-link v-bind:to="{name:'user-id-edit_user',params:{id:this.$store.state.user.id}}" style="text-decoration: none ;color:white">
+        <div v-if="String(user.uid) == this.$store.state.user.uid">
+          <nuxt-link v-bind:to="{name:'user-id-edit_user',params:{id:user.id}}" style="text-decoration: none ;color:white">
               <div class="plusbtn" style="float: right;">ユーザー情報を編集する</div>
           </nuxt-link>
         </div>
     <div class="box3" style="float: left">
-        <div v-if="!(this.$store.state.user.photoURL)">
+        <div v-if="!(user.photoURL)">
             <img class="image3" src="~/assets/image/240ec862387d03003cb4c41cd93cb0be.png">
         </div>
-        <div v-if="this.$store.state.user.photoURL">
-            <img class="image3" :src="user.photo">
+        <div v-if="user.photoURL">
+            <img class="image3" :src="user.photoURL">
         </div>
         <div>
-            <p class="title3">{{this.$store.state.user.displayName}}</p>
-            <p class="content3">{{this.$store.state.user.intro}}</p>
+            <p class="title3">{{user.displayName}}</p>
+            <p class="content3">{{user.intro}}</p>
         </div>
     </div>
 </div> 
@@ -23,6 +23,8 @@
 <script>
 
 export default {
+    props:{user:Object}
+    ,
     beforeMount(){
         console.log(this.user)
     }

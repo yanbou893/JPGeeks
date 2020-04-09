@@ -1,7 +1,9 @@
 <template>
   <div>
     <Header />
+  <div class="container">
     <nuxt />
+  </div>
     <Footer />
   </div>
 </template>
@@ -30,7 +32,9 @@ html {
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
 }
-
+.container{
+  background-color:#fff;
+}
 *,
 *:before,
 *:after {
@@ -47,8 +51,6 @@ html {
 }
 
 .button--green:hover {
-  color: #fff;
-  background-color: #3b8070;
 }
 
 .button--grey {

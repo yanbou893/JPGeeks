@@ -8,7 +8,7 @@
     <i class="fab fa-google" @click="googleLogin" style="cursor : pointer;float:right;"></i>
     </div>
     <p>You don't have an account? 
-      <router-link to="/signup">create account now!!</router-link>
+      <nuxt-link to="/signup">create account now!!</nuxt-link>
     </p>
   </div>
 </template>

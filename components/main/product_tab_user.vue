@@ -1,13 +1,25 @@
 <template>
 	<div>
 	  <div class="allcontents">
-	 <newproduct  :key="index" v-for="(content,index) in contents" :content=content />
+	 <newproduct  :key="index" v-for="(content,index) in getItems" :content=content />
   </div>
+  <paginate
+    :page-count="getPageCount"
+    :page-range="3"
+    :margin-pages="2"
+    :click-handler="clickCallback"
+    :prev-text="'＜'"
+    :next-text="'＞'"
+    :container-class="'pagination'"
+    :page-class="'page-item'">
+  </paginate>
+
   </div>
 </template>
 <script>
 import newproduct from '~/components/main/newproduct.vue'
 import axios from "@/plugins/axios"
+
 
 export default {
   components: {
@@ -15,9 +27,9 @@ export default {
   },
   data:function(){
   	return{
-          contents:[],
-          id:0,
-  		serch_bar:false
+          contents: [],
+          parPage: 9,
+          currentPage: 1
   	}
   },
   beforeMount(){
@@ -32,10 +44,28 @@ export default {
                       console.log(error);
                 });
         
+    },
+   methods: {
+    clickCallback: function (pageNum) {
+       this.currentPage = Number(pageNum);
     }
+   },
+   computed: {
+     getItems: function() {
+      let current = this.currentPage * this.parPage;
+      let start = current - this.parPage;
+      return this.contents.slice(start, current);
+     },
+     getPageCount: function() {
+      return Math.ceil(this.contents.length / this.parPage);
+     }
+   }
 }
 </script>
 <style>
+.page-item{
+  list-style:none;
+}
 @media (max-width: 480px) {
 }
 

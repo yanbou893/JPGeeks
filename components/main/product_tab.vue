@@ -1,12 +1,29 @@
 <template>
 	<div>
 	  <div class="allcontents">
-	   <newproduct  :key="index" v-for="(content,index) in pagedatas[page-1]" :content=content />
+	   <newproduct  :key="index" v-for="(content,index) in getItems" :content=content />
 	   </div>
-    <ul>
-      <li v-for="n of max" :key="n" @click="nav(n)" class="navbutton">{{n}}</li>
-    </ul>
-    </div>
+    
+    <paginate
+    :page-count="getPageCount"
+    :page-range="3"
+    :margin-pages="2"
+    :click-handler="clickCallback"
+    :prev-text="'＜'"
+    :next-text="'＞'"
+    :prev-class="'prevli'"
+    :next-class="'nextli'"
+    :container-class="'pagination'"
+    :page-class="'page-item'">
+  </paginate>
+    <!--<nav class="pagination is-centered" role="navigation" aria-label="pagination">-->
+    <!--  <a class="pagination-previous">Previous</a>-->
+    <!--  <a class="pagination-next">Next page</a>-->
+    <!--  <ul class="pagination-list">-->
+    <!--    <li v-for="n of max" :key="n" @click="nav(n)" class="navbutton"><a class="pagination-link" aria-label="Goto page 1">{{n}}</a></li>-->
+    <!--  </ul>-->
+    <!--</nav>-->
+    <!--</div>-->
   </div>
 </template>
 <script>
@@ -20,10 +37,8 @@ export default {
   data:function(){
   	return{
           contents:[],
-          pagedatas:[],
-          pagedata:[],
-          page:1,
-          max:null,
+          parPage: 9,
+          currentPage: 1
   	}
   },
   beforeMount(){
@@ -32,35 +47,36 @@ export default {
         .then(response => {
               console.log(response.data[0]);
               this.contents=response.data
-              for(var i=0;i<response.data.length;i++){
-              //対象データへのアクセスは data[i] の様な形式
-                this.pagedata.push(response.data[i])
-                if(i%8==0 && i!=0 ){
-                  this.pagedatas.push(this.pagedata)
-                  this.pagedata = [];
-                }else if(i==response.data.length-1){
-                  
-                  this.pagedatas.push(this.pagedata)
-                  this.pagedata = [];
-                }
-              }
-              this.max=this.pagedatas.length
-              
-              this.contents = response.data;
-              console.log(this.contents);
         })
         .catch(error => {
               console.log(error);
         });
     },
   methods:{
-      	nav:function(index){
-      	  this.page = index
-      	}
+    clickCallback: function (pageNum) {
+       this.currentPage = Number(pageNum);
+    }
   },
+   computed: {
+     getItems: function() {
+      let current = this.currentPage * this.parPage;
+      let start = current - this.parPage;
+      return this.contents.slice(start, current);
+     },
+     getPageCount: function() {
+      return Math.ceil(this.contents.length / this.parPage);
+     }
+   }
 }
 </script>
 <style>
+.page-item, .prevli, .nextli{
+  list-style:none;
+  padding:10px;
+}
+.paginate{
+  list-style:none;
+}
 .navbutton{
   list-style:none;
   cursor: pointer;

@@ -27,6 +27,7 @@ export default {
   */
   css: [
      '~/assets/css/prism.css',
+    { src: '~assets/main.scss', lang: 'scss' }
   ],
   /*
   ** Plugins to load before mounting the App
@@ -36,7 +37,9 @@ export default {
     '~/plugins/firebase',
     '~/plugins/auth',
     { src: '@/plugins/vue-chartjs.js', ssr: false },
-    { src: '~/plugins/localStorage.js', ssr: false }
+    { src: '~/plugins/localStorage.js', ssr: false },
+    { src: '@/plugins/pagenate.js', ssr: false },
+    { src: '@/plugins/vue-mavon-editor.js', ssr: false },
   ],
   /*
   ** Nuxt.js dev-modules

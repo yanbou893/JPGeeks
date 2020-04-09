@@ -4,10 +4,11 @@
         <div class="contents_docmentacion">作品の内容について</div>
         <div class="contents_docmentacion_sub">こだわった点や、どういった発想で生まれたサービスなのかを教えてください。</div>
       </div>
-      <div style="display:flex" class="bodycontents">
-        <textarea v-model="model" class="bodyformat"></textarea>
-        <div v-html="$md.render(String(model))" class="outputformat"></div>
-      </div>
+          <div class="mavonEditor">
+            <no-ssr>
+              <mavon-editor :toolbars="markdownOption" v-model="model" :language="'ja'"/>
+            </no-ssr>
+          </div>
       <div @click="savenote">save</div>
     </div>
 </template>
