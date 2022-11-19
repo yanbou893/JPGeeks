@@ -20,11 +20,11 @@
     "firebaseui": "^4.4.0",
     "markdown-it": "^10.0.0",
     "mavon-editor": "^2.8.3",
-    "nuxt": "^2.0.0",
+    "nuxt": "^2.15.8",
     "prismjs": "^1.19.0",
     "semantic-ui-vue": "^0.8.1",
     "tailwindcss": "^1.1.4",
-    "vue-2-bulma-pagination": "0.0.8",
+    "vue-2-bulma-pagination": "1.0.2",
     "vue-chartjs": "^3.5.0",
     "vuejs-paginate": "^2.1.0",
     "vuex-persistedstate": "^2.7.1"
